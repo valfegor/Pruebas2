@@ -4,7 +4,7 @@ const scoreController = require("../controllers/score");
 
 
 
-router.get("listScore",scoreController.showscore);
-
+router.get("/listScore",scoreController.showscore);
+router.post("/registerScore",scoreController.registerScore)
 
 module.exports = router;

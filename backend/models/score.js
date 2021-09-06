@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
 const scoreSchema = new mongoose.Schema({
-    user: String,
-    RealScore:Number,
+    name: String,
+    users: Array,
+    RealScore:Array,
+    pt_propuesto:Number,
     dbStatus: Boolean,
     date: { type: Date, default: Date.now },
+    task_id:{ type: mongoose.Schema.ObjectId, ref: "task" },
+    tasks_ids:Array,
+
 })
 
 

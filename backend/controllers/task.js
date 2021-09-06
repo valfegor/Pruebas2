@@ -4,6 +4,7 @@ const fs = require("fs");
 const moment = require("moment");
 const path = require("path");
 const Board = require("../models/board");
+const Score = require('../models/score');
 
 const saveTask = async (req, res) => {
   
@@ -91,6 +92,8 @@ const updateTask = async (req, res) => {
     scoreUser = 0;
     status = true;
   }
+
+  const ScoreUser = await Score.findOneAndUpdate()
 
   console.log(req.user.name);
 
