@@ -26,7 +26,7 @@ const registerScore = async (req, res) => {
 
     })
 
-    let result = await socre.save();
+    let result = await score.save();
 
     if(!result) return res.status(400).send("Sorry Cant save");
 
