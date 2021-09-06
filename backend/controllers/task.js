@@ -94,7 +94,7 @@ const updateTask = async (req, res) => {
   }
 
 
- 
+ let data = [];
 
   console.log(req.user.name);
 
@@ -105,13 +105,15 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
-  
+  data.push(task.userModify,task.score)
 
   const ScoreUser = await Score.findOneAndUpdate(req.body.rankingName,{
       $push:{users:req.user.name},
       $push:{tasks_ids:task._id},
-      $push:{}
+      RealScore:data,
   })
+
+  if(!ScoreUser) return res.status(400).send("Sorry cant save the score");
 
 
   if (!task) return res.status(400).send("Sorry Please Try again");
