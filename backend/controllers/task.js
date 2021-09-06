@@ -86,18 +86,43 @@ const updateTask = async (req, res) => {
   let status = Boolean;
 
   if (req.body.taskStatus == "done") {
-    scoreUser = 1;
+    
     status = false;
   } else {
-    scoreUser = 0;
+    
     status = true;
   }
 
 
- let data = [];
+ 
 
   console.log(req.user.name);
 
+  let score = await Score.find()
+
+  let data = {
+    name:req.user.name,
+     score:scoreUser
+  };
+
+
+  for (const iterator of score) {
+      let exist = iterator.RealScore.some(element=>element.name == data.name);
+      console.log(exist)
+      if(exist){
+        
+        iterator.RealScore.map(element=>{
+          scoreUser = element.score ++;
+            console.log(element.score);
+            return scoreUser
+        })
+        
+      }
+      
+  }
+
+  
+  
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     score: scoreUser,
@@ -105,12 +130,13 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
-  data.push(task.userModify,task.score)
+  
+
 
   const ScoreUser = await Score.findOneAndUpdate(req.body.rankingName,{
       $push:{users:req.user.name},
       $push:{tasks_ids:task._id},
-      RealScore:data,
+      $push:{RealScore:data},
   })
 
   if(!ScoreUser) return res.status(400).send("Sorry cant save the score");
