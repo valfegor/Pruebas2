@@ -1,0 +1,25 @@
+.headerSpacer {
+  flex: 1 1 auto;
+}
+
+a {
+  text-decoration: none;
+  color: #e1dcdc;
+}
+
+.bgHeader {
+  background-color: #2b475e;
+  height: 65px;
+}
+
+img {
+  margin-top: 15px;
+  padding: 4px;
+  border: #969191 solid;
+  border-width: 0.5px 0.5px 0.5px 0.5px;
+  box-shadow: 2px 2px 5px #999;
+}
+ul {
+  font-family: "Lilita One";
+  font-size: 25px;
+}
