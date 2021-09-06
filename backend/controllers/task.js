@@ -79,7 +79,7 @@ const updateTask = async (req, res) => {
   console.log(req.user._id);
   if (!validId) return res.status(400).send("Invalid id");
 
-  if (!req.body._id || !req.body.taskStatus)
+  if (!req.body._id || !req.body.taskStatus || !req.body.rankingName)
     return res.status(400).send("Sorry Please Check Out All The camps please");
 
   let scoreUser = 0;
@@ -93,7 +93,8 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  const ScoreUser = await Score.findOneAndUpdate()
+
+ 
 
   console.log(req.user.name);
 
@@ -103,6 +104,15 @@ const updateTask = async (req, res) => {
     dbStatus: status,
     userModify: req.user.name,
   });
+
+  
+
+  const ScoreUser = await Score.findOneAndUpdate(req.body.rankingName,{
+      $push:{users:req.user.name},
+      $push:{tasks_ids:task._id},
+      $push:{}
+  })
+
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
