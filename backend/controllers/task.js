@@ -92,7 +92,7 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  console.log(req.body._id);
+  console.log(req.user.name);
 
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
@@ -149,5 +149,6 @@ const deleteTask = async (req, res) => {
   }
   return res.status(200).send({ message: "Task deleted" });
 };
+
 
 module.exports = { saveTask, updateTask, listTask, deleteTask };
