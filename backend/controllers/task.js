@@ -202,6 +202,7 @@ const asignTask = async (req, res) => {
 
   let assignedtask = await Task.findOne({ _id: req.body._idtask });
 
+  console.log(assignedtask)
   if (assignedtask.assigned === true)
     return res.status(400).send(" Sorry the task its already assigned");
 
@@ -247,17 +248,15 @@ const unassingTask = async (req, res) => {
   
   const task = await Task.findById(req.body._idTask);
   
-    if(task.assigned!=true){
-      return res.status(400).send("The task is not assigned please check");
-    }
-
-  console.log(task.name);
+   
 
   const indice = user.AssignedTasks.findIndex(element=>element.name === task.name );
 
+  console.log(indice);
+
   if(!indice) return res.status(400).send("Sorry Cant Find the task");
 
-  console.log(indice);
+  
 
   const arreglo = user.AssignedTasks
   
