@@ -99,9 +99,9 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  const inactiveTask = await Task.findById({ _id: req.body._id});
+  const inactiveTask = await Task.findById({ _id: req.body._id });
 
-  if(inactiveTask.dbStatus==false){
+  if (inactiveTask.dbStatus == false) {
     return res.status(400).send("You already did that Task");
   }
 
@@ -118,8 +118,6 @@ const updateTask = async (req, res) => {
       .status(400)
       .send("Please check that user dont have assigned this task");
 
-  
-
   if (scoreUser == 1) {
     let parser = parseInt(scoreUser);
     let acumulador = 0;
@@ -131,12 +129,11 @@ const updateTask = async (req, res) => {
 
     console.log(user.EarnedPoints);
 
-    
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
     });
 
-    if(!userPoints) return res.status(400).send("Cant Save the points");
+    if (!userPoints) return res.status(400).send("Cant Save the points");
 
     return res.status(200).send({ userPoints });
   }
@@ -172,6 +169,8 @@ const deleteTask = async (req, res) => {
   if (!validId) return res.status(400).send("Invalid id");
 
   let taskImg = await Task.findById(req.params._id);
+
+  if(taskImg.taskStatus === "done") return res.status(400).send("Sorry cant Erase that Task its Already Completed");
 
   taskImg = taskImg.imageUrl;
   taskImg = taskImg.split("/")[4];
