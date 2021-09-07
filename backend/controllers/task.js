@@ -89,9 +89,6 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-
-
-
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     score: scoreUser,
@@ -99,27 +96,42 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
+  let prueba = 0;
 
-  let prueba = 0
-
-  if(task.taskStatus == "done"){
-    prueba+=prueba+1
+  if (task.taskStatus == "done") {
+    prueba = prueba + task.score;
   }
 
-  console.log(prueba)
+  console.log(prueba);
 
   let data = {
-    id_task:task._id,
-    score:prueba
+    id_task: task._id,
+    score: prueba,
+  };
+
+  const user = await User.find({ _id: req.user._id });
+
+  for (const iterator of user) {
+
+    let existe = iterator.EarnedPoints.some(element=>element.id_task  === data.id_task)
+
+    if(existe){
+      const actualizado =  iterator.EarnedPoints.map(element=>{
+        if(element.score === data.score){
+          element.score++;
+          console.log(element.score);
+          return element;
+          
+        }
+        else{
+          return element
+        }
+      })
+    }
+
+    console.log(existe);
+
   }
-
-
-  const user = await User.findByIdAndUpdate(req.user._id, {
-
-  })
-
-
-
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
