@@ -128,34 +128,18 @@ const updateTask = async (req, res) => {
       console.log(acumulador);
     }
 
-    console.log(user.EarnedPoints);
+    console.log(user);
 
-    let data = {
-      name:task.name.toString(),
-      idTask:task._id.toString(),
-      scoretask:task.score
-
-    }
-
-    console.log(data)
-
-    let index = user.AssignedTasks.indexOf(data);
-
-    console.log(index); 
-
-    console.log(task._id.toString());
+    let index = user.AssignedTasks;
 
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
-
     });
 
     if (!userPoints) return res.status(400).send("Cant Save the points");
 
     return res.status(200).send({ userPoints });
   }
-
-  console.log(user);
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
@@ -187,7 +171,10 @@ const deleteTask = async (req, res) => {
 
   let taskImg = await Task.findById(req.params._id);
 
-  if(taskImg.taskStatus === "done") return res.status(400).send("Sorry cant Erase that Task its Already Completed");
+  if (taskImg.taskStatus === "done")
+    return res
+      .status(400)
+      .send("Sorry cant Erase that Task its Already Completed");
 
   taskImg = taskImg.imageUrl;
   taskImg = taskImg.split("/")[4];
@@ -237,7 +224,7 @@ const asignTask = async (req, res) => {
     name: task.name,
     idTask: task._id,
     scoretask: task.score,
-    completed:false,
+    completed: false,
   };
 
   const user = await User.findByIdAndUpdate(
