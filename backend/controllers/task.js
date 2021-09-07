@@ -109,29 +109,19 @@ const updateTask = async (req, res) => {
     score: prueba,
   };
 
-  const user = await User.find({ _id: req.user._id });
+  const user = await User.findOne({ _id: req.user._id });
 
-  for (const iterator of user) {
+  console.log(user.EarnedPoints)
 
-    let existe = iterator.EarnedPoints.some(element=>element.id_task  === data.id_task)
-
-    if(existe){
-      const actualizado =  iterator.EarnedPoints.map(element=>{
-        if(element.score === data.score){
-          element.score++;
-          console.log(element.score);
-          return element;
-          
-        }
-        else{
-          return element
-        }
-      })
-    }
-
-    console.log(existe);
-
+  for (const iterator of user.EarnedPoints) {
+    
   }
+
+
+
+
+
+  
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
