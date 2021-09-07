@@ -118,7 +118,7 @@ const updateTask = async (req, res) => {
       .status(400)
       .send("Please check that user dont have assigned this task");
 
-  let parser = parseInt(scoreUser);
+  
 
   if (scoreUser == 1) {
     let parser = parseInt(scoreUser);
@@ -135,6 +135,10 @@ const updateTask = async (req, res) => {
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
     });
+
+    if(!userPoints) return res.status(400).send("Cant Save the points");
+
+    return res.status(200).send({ userPoints });
   }
 
   console.log(user);
