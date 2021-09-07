@@ -99,7 +99,7 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  
+
   const inactiveTask = await Task.findById({ _id: req.body._id });
 
   if (inactiveTask.dbStatus == false) {
@@ -125,10 +125,10 @@ const updateTask = async (req, res) => {
 
     for (iterator of user.EarnedPoints) {
       acumulador = iterator + parser;
-    
+
     }
 
-    
+
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
     });
@@ -237,4 +237,35 @@ const asignTask = async (req, res) => {
   return res.status(200).send({ user });
 };
 
-module.exports = { saveTask, updateTask, listTask, deleteTask, asignTask };
+
+const unassingTask = async (req, res) => {
+  if (!req.body._idUser || !req.body._idTask) return res.status(400).send("Sorry please have to specify a user");
+
+  const user = await User.findById(req.body._idUser);
+  console.log(user.AssignedTasks
+  );
+  
+  const task = await Task.findById(req.body._idTask);
+
+  console.log(task.name);
+
+  const indice = user.AssignedTasks.findIndex(element=>element.name === task.name )
+
+  console.log(indice);
+
+  const arreglo = user.AssignedTasks
+  
+  arreglo.splice(indice,1);
+
+  const user2 = await User.findByIdAndUpdate(req.body._idUser,{
+    AssignedTasks:arreglo
+
+  })
+  console.log(arreglo)
+  
+
+
+  
+}
+
+module.exports = { saveTask, updateTask, listTask, deleteTask, asignTask, unassingTask };
