@@ -89,7 +89,7 @@ const updateTask = async (req, res) => {
   if (!req.body._id || !req.body.taskStatus)
     return res.status(400).send("Sorry Please Check Out All The camps please");
 
-  let scoreUser = 0;
+  
   let status = Boolean;
 
   if (req.body.taskStatus == "done") {
@@ -100,29 +100,17 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
+  
+
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
-    score: scoreUser,
     dbStatus: status,
     userModify: req.user.name,
   });
 
-  let prueba = 0;
 
-  if (task.taskStatus == "done") {
-    prueba = prueba + task.score;
-  }
-
-  console.log(prueba);
-
-  let data = {
-    id_task: task._id,
-    score: prueba,
-  };
-
-  const user = await User.findOne({ _id: req.user._id });
-
-  console.log(user.EarnedPoints);
+  
+ 
 
  
 
