@@ -99,13 +99,13 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  /*
+  
   const inactiveTask = await Task.findById({ _id: req.body._id });
 
   if (inactiveTask.dbStatus == false) {
     return res.status(400).send("You already did that Task");
   }
-*/
+
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     dbStatus: status,
@@ -125,13 +125,10 @@ const updateTask = async (req, res) => {
 
     for (iterator of user.EarnedPoints) {
       acumulador = iterator + parser;
-      console.log(acumulador);
+    
     }
 
-    console.log(user);
-
-    let index = user.AssignedTasks;
-
+    
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
     });
