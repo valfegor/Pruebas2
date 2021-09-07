@@ -11,9 +11,13 @@ const saveTask = async (req, res) => {
   console.log(req.user._id);
   if (!validId) return res.status(400).send("Invalid id");
 
-  if (!req.body.name || !req.body.description || !req.body.boardName)
+  if (!req.body.name || !req.body.description || !req.body.boardName || !req.body.score)
     return res.status(400).send("Incomplete Data Please Try Again");
 
+
+    if(req.body.score <=0 || req.body.score>5){
+      return res.status(400).send("Sorry you cant just use a number between 1 and 5")
+    }
   const existTask = await Task.find({ boardName: req.body.boardName });
 
   let existantInBoard = existTask.some(
@@ -59,7 +63,7 @@ const saveTask = async (req, res) => {
     imageUrl: imageUrl,
     taskStatus: "to-do",
     dbStatus: true,
-    score: 0,
+    score: req.body.score,
     boardName: board.name,
   });
 
