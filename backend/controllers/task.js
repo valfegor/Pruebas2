@@ -107,22 +107,31 @@ const updateTask = async (req, res) => {
 
   const user = await User.findById(task.assignedTo);
 
-  if(!user) return res.status(400).send("Please check that user dont have assigned this task");
+  if (!user)
+    return res
+      .status(400)
+      .send("Please check that user dont have assigned this task");
 
   let parser = parseInt(scoreUser);
 
-  let data= {}
+  if (scoreUser == 1) {
+    let parser = parseInt(scoreUser);
+    let acumulador = 0;
 
-  if(scoreUser == 1){
-      const userPoints = await User.findByIdAndUpdate(user._id,{
-        $push:{EarnedPoints:parser}
-      })
+    for (iterator of user.EarnedPoints) {
+      acumulador = iterator + parser;
+      console.log(acumulador);
+    }
+
+    console.log(user.EarnedPoints);
+
+    
+    const userPoints = await User.findByIdAndUpdate(user._id, {
+      $push: { EarnedPoints: acumulador },
+    });
   }
 
-
-
-
-  console.log(user)
+  console.log(user);
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
@@ -147,10 +156,6 @@ const listTask = async (req, res) => {
 
   return res.status(200).send({ task });
 };
-
-
-
-
 
 const deleteTask = async (req, res) => {
   const validId = mongoose.Types.ObjectId.isValid(req.params._id);
@@ -190,7 +195,7 @@ const asignTask = async (req, res) => {
   if (assignedtask.assigned === true)
     return res.status(400).send(" Sorry the task its already assigned");
 
-  const existingUser = await User.findOne({ _id:req.body._idUser});
+  const existingUser = await User.findOne({ _id: req.body._idUser });
 
   console.log(existingUser);
 
