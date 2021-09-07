@@ -182,21 +182,36 @@ const asignTask = async (req, res) => {
   if(!req.body._idtask || !req.body._idUser) return res.status(400).send("Sorry please have to specify a task for the user");
 
   
+  let assignedtask = await Task.findOne({_id:req.body._idtask})
+
+  if(assignedtask.assigned === true) return res.status(400).send(" Sorry the task its already assigned");
+
+
 
   const task = await Task.findByIdAndUpdate({_id:req.body._idtask},{
-
+    assigned:true,
 
     
   });
 
+  let data = {
+    name:task.name,
+    idTask:task._id,
+    scoretask:task.score
+  }
+
   const user = await User.findByIdAndUpdate({_id:req.body._idUser},{ 
-
+    $push:{AssignedTasks: data  }
   })
-
 
 
   console.log(user);
   console.log(task);
+
+
+  return res.status(200).send({user})
+
+  
 
 
 
