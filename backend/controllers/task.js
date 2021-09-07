@@ -99,6 +99,28 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
+
+  let prueba = 0
+
+  if(task.taskStatus == "done"){
+    prueba+=prueba+1
+  }
+
+  console.log(prueba)
+
+  let data = {
+    id_task:task._id,
+    score:prueba
+  }
+
+
+  const user = await User.findByIdAndUpdate(req.user._id, {
+
+  })
+
+
+
+
   if (!task) return res.status(400).send("Sorry Please Try again");
 
   return res.status(200).send({ task });
