@@ -71,7 +71,7 @@ const saveTask = async (req, res) => {
     dbStatus: true,
     score: req.body.score,
     boardName: board.name,
-    assigned:false
+    assigned: false,
   });
 
   let result = await task.save();
@@ -89,7 +89,6 @@ const updateTask = async (req, res) => {
   if (!req.body._id || !req.body.taskStatus)
     return res.status(400).send("Sorry Please Check Out All The camps please");
 
-  
   let status = Boolean;
 
   if (req.body.taskStatus == "done") {
@@ -100,19 +99,11 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-  
-
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     dbStatus: status,
     userModify: req.user.name,
   });
-
-
-  
- 
-
- 
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
@@ -163,47 +154,48 @@ const deleteTask = async (req, res) => {
 };
 
 const asignTask = async (req, res) => {
-
   //el id hace referencia al id de la tarea que se va a asignar
   //name al nombre del usuario
 
-  if(!req.body._idtask || !req.body._idUser) return res.status(400).send("Sorry please have to specify a task for the user");
+  if (!req.body._idtask || !req.body._idUser)
+    return res
+      .status(400)
+      .send("Sorry please have to specify a task for the user");
 
-  
-  let assignedtask = await Task.findOne({_id:req.body._idtask})
+  let assignedtask = await Task.findOne({ _id: req.body._idtask });
 
-  if(assignedtask.assigned === true) return res.status(400).send(" Sorry the task its already assigned");
+  if (assignedtask.assigned === true)
+    return res.status(400).send(" Sorry the task its already assigned");
 
+  const existingUser = await User.findOne({ _id:req.body._idUser});
 
+  console.log(existingUser);
 
-  const task = await Task.findByIdAndUpdate({_id:req.body._idtask},{
-    assigned:true,
-
-    
-  });
+  const task = await Task.findByIdAndUpdate(
+    { _id: req.body._idtask },
+    {
+      assigned: true,
+      assignedTo: existingUser._id,
+    }
+  );
 
   let data = {
-    name:task.name,
-    idTask:task._id,
-    scoretask:task.score
-  }
+    name: task.name,
+    idTask: task._id,
+    scoretask: task.score,
+  };
 
-  const user = await User.findByIdAndUpdate({_id:req.body._idUser},{ 
-    $push:{AssignedTasks: data  }
-  })
-
+  const user = await User.findByIdAndUpdate(
+    { _id: req.body._idUser },
+    {
+      $push: { AssignedTasks: data },
+    }
+  );
 
   console.log(user);
   console.log(task);
 
-
-  return res.status(200).send({user})
-
-  
-
-
-
-
+  return res.status(200).send({ user });
 };
 
-module.exports = { saveTask, updateTask, listTask, deleteTask , asignTask};
+module.exports = { saveTask, updateTask, listTask, deleteTask, asignTask };
