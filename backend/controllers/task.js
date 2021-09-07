@@ -246,10 +246,16 @@ const unassingTask = async (req, res) => {
   );
   
   const task = await Task.findById(req.body._idTask);
+  
+    if(task.assigned!=true){
+      return res.status(400).send("The task is not assigned please check");
+    }
 
   console.log(task.name);
 
-  const indice = user.AssignedTasks.findIndex(element=>element.name === task.name )
+  const indice = user.AssignedTasks.findIndex(element=>element.name === task.name );
+
+  if(!indice) return res.status(400).send("Sorry Cant Find the task");
 
   console.log(indice);
 
@@ -257,12 +263,18 @@ const unassingTask = async (req, res) => {
   
   arreglo.splice(indice,1);
 
+  const task2 = await Task.findByIdAndUpdate(req.body._idTask,{
+    assigned:false,
+  })
+
   const user2 = await User.findByIdAndUpdate(req.body._idUser,{
     AssignedTasks:arreglo
 
   })
   console.log(arreglo)
-  
+
+
+  return res.status(200).send({message:"Succes Unassing The task"});
 
 
   
