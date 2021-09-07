@@ -11,13 +11,19 @@ const saveTask = async (req, res) => {
   console.log(req.user._id);
   if (!validId) return res.status(400).send("Invalid id");
 
-  if (!req.body.name || !req.body.description || !req.body.boardName || !req.body.score)
+  if (
+    !req.body.name ||
+    !req.body.description ||
+    !req.body.boardName ||
+    !req.body.score
+  )
     return res.status(400).send("Incomplete Data Please Try Again");
 
-
-    if(req.body.score <=0 || req.body.score>5){
-      return res.status(400).send("Sorry you cant just use a number between 1 and 5")
-    }
+  if (req.body.score <= 0 || req.body.score > 5) {
+    return res
+      .status(400)
+      .send("Sorry you cant just use a number between 1 and 5");
+  }
   const existTask = await Task.find({ boardName: req.body.boardName });
 
   let existantInBoard = existTask.some(
@@ -115,17 +121,9 @@ const updateTask = async (req, res) => {
 
   const user = await User.findOne({ _id: req.user._id });
 
-  console.log(user.EarnedPoints)
+  console.log(user.EarnedPoints);
 
-  for (const iterator of user.EarnedPoints) {
-    
-  }
-
-
-
-
-
-  
+ 
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
@@ -175,4 +173,25 @@ const deleteTask = async (req, res) => {
   return res.status(200).send({ message: "Task deleted" });
 };
 
-module.exports = { saveTask, updateTask, listTask, deleteTask };
+const asignTask = async (req, res) => {
+
+  //el id hace referencia al id de la tarea que se va a asignar
+  //name al nombre del usuario
+
+  if(!req.body._id || !req.body.name) return res.status(400).send("Sorry please have to specify a task for the user");
+
+  const user = await User.findOne({name:req.body.name});
+
+  const task = await Task.findById({_id:req.body._id});
+
+  
+
+  console.log(user);
+  console.log(task);
+
+
+
+
+};
+
+module.exports = { saveTask, updateTask, listTask, deleteTask , asignTask};

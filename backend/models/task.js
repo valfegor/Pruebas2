@@ -12,6 +12,7 @@ const taskSchema = new mongoose.Schema({
   dbStatus: Boolean,
   userModify: String,
   author:String,
+  assigned:Boolean
 
 });
 
