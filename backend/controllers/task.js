@@ -71,6 +71,7 @@ const saveTask = async (req, res) => {
     dbStatus: true,
     score: req.body.score,
     boardName: board.name,
+    assigned:false
   });
 
   let result = await task.save();
@@ -178,13 +179,21 @@ const asignTask = async (req, res) => {
   //el id hace referencia al id de la tarea que se va a asignar
   //name al nombre del usuario
 
-  if(!req.body._id || !req.body.name) return res.status(400).send("Sorry please have to specify a task for the user");
-
-  const user = await User.findOne({name:req.body.name});
-
-  const task = await Task.findById({_id:req.body._id});
+  if(!req.body._idtask || !req.body._idUser) return res.status(400).send("Sorry please have to specify a task for the user");
 
   
+
+  const task = await Task.findByIdAndUpdate({_id:req.body._idtask},{
+
+
+    
+  });
+
+  const user = await User.findByIdAndUpdate({_id:req.body._idUser},{ 
+
+  })
+
+
 
   console.log(user);
   console.log(task);
