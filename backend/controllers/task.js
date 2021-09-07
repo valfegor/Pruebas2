@@ -99,7 +99,6 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
-
   const inactiveTask = await Task.findById({ _id: req.body._id });
 
   if (inactiveTask.dbStatus == false) {
@@ -125,9 +124,7 @@ const updateTask = async (req, res) => {
 
     for (iterator of user.EarnedPoints) {
       acumulador = iterator + parser;
-
     }
-
 
     const userPoints = await User.findByIdAndUpdate(user._id, {
       $push: { EarnedPoints: acumulador },
@@ -202,7 +199,7 @@ const asignTask = async (req, res) => {
 
   let assignedtask = await Task.findOne({ _id: req.body._idtask });
 
-  console.log(assignedtask)
+  console.log(assignedtask);
   if (assignedtask.assigned === true)
     return res.status(400).send(" Sorry the task its already assigned");
 
@@ -238,45 +235,48 @@ const asignTask = async (req, res) => {
   return res.status(200).send({ user });
 };
 
-
 const unassingTask = async (req, res) => {
-  if (!req.body._idUser || !req.body._idTask) return res.status(400).send("Sorry please have to specify a user");
+  if (!req.body._idUser || !req.body._idTask)
+    return res.status(400).send("Sorry please have to specify a user");
 
   const user = await User.findById(req.body._idUser);
-  console.log(user.AssignedTasks
-  );
-  
+  if (!user) return res.status(400).send("The user dont exist please check");
   const task = await Task.findById(req.body._idTask);
-  
-   
+  if (!task)
+    return res.status(400).send("Sorry the task dont exist please check");
 
-  const indice = user.AssignedTasks.findIndex(element=>element.name === task.name );
+  const indice = user.AssignedTasks.findIndex(
+    (element) => element.name === task.name
+  );
 
-  console.log(indice);
+  if (!indice) return res.status(400).send("Sorry Cant Find the task");
 
-  if(!indice) return res.status(400).send("Sorry Cant Find the task");
+  const arreglo = user.AssignedTasks;
 
-  
+  arreglo.splice(indice, 1);
 
-  const arreglo = user.AssignedTasks
-  
-  arreglo.splice(indice,1);
+  const task2 = await Task.findByIdAndUpdate(req.body._idTask, {
+    assigned: false,
+  });
 
-  const task2 = await Task.findByIdAndUpdate(req.body._idTask,{
-    assigned:false,
-  })
+  if (!task2)
+    return res.status(400).send("Cant update the task please try again");
 
-  const user2 = await User.findByIdAndUpdate(req.body._idUser,{
-    AssignedTasks:arreglo
+  const user2 = await User.findByIdAndUpdate(req.body._idUser, {
+    AssignedTasks: arreglo,
+  });
 
-  })
-  console.log(arreglo)
+  if (!user2)
+    return res.status(400).send("Sorry the user dont exist please check");
 
+  return res.status(200).send({ message: "Succes Unassing The task" });
+};
 
-  return res.status(200).send({message:"Succes Unassing The task"});
-
-
-  
-}
-
-module.exports = { saveTask, updateTask, listTask, deleteTask, asignTask, unassingTask };
+module.exports = {
+  saveTask,
+  updateTask,
+  listTask,
+  deleteTask,
+  asignTask,
+  unassingTask,
+};
