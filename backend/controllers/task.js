@@ -105,6 +105,25 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
+  const user = await User.findById(task.assignedTo);
+
+  if(!user) return res.status(400).send("Please check that user dont have assigned this task");
+
+  let parser = parseInt(scoreUser);
+
+  let data= {}
+
+  if(scoreUser == 1){
+      const userPoints = await User.findByIdAndUpdate(user._id,{
+        $push:{EarnedPoints:parser}
+      })
+  }
+
+
+
+
+  console.log(user)
+
   if (!task) return res.status(400).send("Sorry Please Try again");
 
   return res.status(200).send({ task });
@@ -128,6 +147,10 @@ const listTask = async (req, res) => {
 
   return res.status(200).send({ task });
 };
+
+
+
+
 
 const deleteTask = async (req, res) => {
   const validId = mongoose.Types.ObjectId.isValid(req.params._id);
