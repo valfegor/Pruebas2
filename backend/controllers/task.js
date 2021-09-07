@@ -4,26 +4,24 @@ const fs = require("fs");
 const moment = require("moment");
 const path = require("path");
 const Board = require("../models/board");
-const Score = require('../models/score');
+const User = require("../models/user");
 
 const saveTask = async (req, res) => {
-  
-    let validId = mongoose.Types.ObjectId.isValid(req.user._id);
-    console.log(req.user._id);
-    if (!validId) return res.status(400).send("Invalid id");
-
+  let validId = mongoose.Types.ObjectId.isValid(req.user._id);
+  console.log(req.user._id);
+  if (!validId) return res.status(400).send("Invalid id");
 
   if (!req.body.name || !req.body.description || !req.body.boardName)
     return res.status(400).send("Incomplete Data Please Try Again");
 
-    const existTask = await Task.find({ boardName: req.body.boardName });
+  const existTask = await Task.find({ boardName: req.body.boardName });
 
-    let existantInBoard = existTask.some(
-      (element) => element.name == req.body.name
-    );
-  
-    if (existantInBoard)
-      return res.status(400).send("Take Another Board that task already exist");
+  let existantInBoard = existTask.some(
+    (element) => element.name == req.body.name
+  );
+
+  if (existantInBoard)
+    return res.status(400).send("Take Another Board that task already exist");
 
   console.log(req.body.boardName);
   const board = await Board.findOne({ name: req.body.boardName });
@@ -46,8 +44,6 @@ const saveTask = async (req, res) => {
         url + "uploads/" + moment().unix() + path.extname(req.files.image.path);
     }
   }
-
- 
 
   //Author sera verdaderamente req.user.name
 
@@ -79,68 +75,29 @@ const updateTask = async (req, res) => {
   console.log(req.user._id);
   if (!validId) return res.status(400).send("Invalid id");
 
-  if (!req.body._id || !req.body.taskStatus || !req.body.rankingName)
+  if (!req.body._id || !req.body.taskStatus)
     return res.status(400).send("Sorry Please Check Out All The camps please");
 
   let scoreUser = 0;
   let status = Boolean;
 
   if (req.body.taskStatus == "done") {
-    
+    scoreUser = 1;
     status = false;
   } else {
-    
+    scoreUser = 0;
     status = true;
   }
 
 
- 
-
-  console.log(req.user.name);
-
-  let score = await Score.find()
-
-  let data = {
-    name:req.user.name,
-     score:scoreUser
-  };
 
 
-  for (const iterator of score) {
-      let exist = iterator.RealScore.some(element=>element.name == data.name);
-      console.log(exist)
-      if(exist){
-        
-        iterator.RealScore.map(element=>{
-          scoreUser = element.score ++;
-            console.log(element.score);
-            return scoreUser
-        })
-        
-      }
-      
-  }
-
-  
-  
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     score: scoreUser,
     dbStatus: status,
     userModify: req.user.name,
   });
-
-  
-
-
-  const ScoreUser = await Score.findOneAndUpdate(req.body.rankingName,{
-      $push:{users:req.user.name},
-      $push:{tasks_ids:task._id},
-      $push:{RealScore:data},
-  })
-
-  if(!ScoreUser) return res.status(400).send("Sorry cant save the score");
-
 
   if (!task) return res.status(400).send("Sorry Please Try again");
 
@@ -163,7 +120,6 @@ const listTask = async (req, res) => {
       .status(400)
       .send("Sorry Cant Find Any task please go and create a task");
 
-  
   return res.status(200).send({ task });
 };
 
@@ -190,6 +146,5 @@ const deleteTask = async (req, res) => {
   }
   return res.status(200).send({ message: "Task deleted" });
 };
-
 
 module.exports = { saveTask, updateTask, listTask, deleteTask };

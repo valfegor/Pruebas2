@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   roleId: { type: mongoose.Schema.ObjectId, ref: "role" },
   date: { type: Date, default: Date.now },
   dbStatus: Boolean,
+  EarnedPoints:Array,
 });
 
 userSchema.methods.generateJWT = function () {
