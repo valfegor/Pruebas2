@@ -99,6 +99,12 @@ const updateTask = async (req, res) => {
     status = true;
   }
 
+  const inactiveTask = await Task.findById({ _id: req.body._id});
+
+  if(inactiveTask.dbStatus==false){
+    return res.status(400).send("You already did that Task");
+  }
+
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
     dbStatus: status,
