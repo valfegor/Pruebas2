@@ -276,6 +276,10 @@ const unassingTask = async (req, res) => {
 const listAsignedTasks = async (req, res) => {
   const validId = mongoose.Types.ObjectId.isValid(req.user._id);
   if (!validId) return res.status(400).send("Invalid id");
+
+  const user = await User.find({ _id: req.user._id});
+
+  console.log(user);
 }
 
 module.exports = {
@@ -285,4 +289,5 @@ module.exports = {
   deleteTask,
   asignTask,
   unassingTask,
+  listAsignedTasks
 };
