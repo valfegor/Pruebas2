@@ -325,7 +325,7 @@ const listRankingPoints = async (req, res) => {
   let ranking=[];
 
   for(let i of user){
-    let filtro = i.EarnedPoints.filter(element=>element.scorecompleted >= 1)
+    let filtro = i.EarnedPoints.filter(element=>element.scorecompleted > 1)
     console.log(filtro)
     ranking.push(filtro);
   }
