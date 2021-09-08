@@ -124,12 +124,9 @@ const updateTask = async (req, res) => {
 
     let data = {};
 
-    
-
     console.log(user);
 
     if (user.EarnedPoints.length == 0) {
-     
       data = {
         scorecompleted: acumScore,
       };
@@ -141,34 +138,23 @@ const updateTask = async (req, res) => {
       if (!userPoints) return res.status(400).send("Cant Save the points");
 
       return res.status(200).send({ userPoints });
-    }else{
+    } else {
+      let existe = user.EarnedPoints.some(
+        (element) => element.scorecompleted >= 1
+      );
 
-      let existe = user.EarnedPoints.some(element=>element.scorecompleted >= 1 );
+      console.log(existe);
 
-      console.log(existe)
-
-      if(existe){
-
-        const nuevopuntaje = user.EarnedPoints.map(element=>{
-          data={scorecompleted:element.scorecompleted+1 };
-          
-        })
-
-        const userPoints = await User.findByIdAndUpdate(user._id, {
-          EarnedPoints: data
+      if (existe) {
+        const nuevopuntaje = user.EarnedPoints.map((element) => {
+          data = { scorecompleted: element.scorecompleted + 1 };
         });
 
+        const userPoints = await User.findByIdAndUpdate(user._id, {
+          EarnedPoints: data,
+        });
       }
-      
-        
-      
-     
-
-
-      
     }
-
-    
   }
 
   if (!task) return res.status(400).send("Sorry Please Try again");
@@ -330,6 +316,13 @@ const listAsignedTasks = async (req, res) => {
     return res.status(400).send("Sorry the user dont have asigned tasks ");
 };
 
+
+const listRankingPoints = async (req, res) => {
+  const user = await User.find();
+
+  console.log(user);
+}
+
 module.exports = {
   saveTask,
   updateTask,
@@ -338,4 +331,5 @@ module.exports = {
   asignTask,
   unassingTask,
   listAsignedTasks,
+  listRankingPoints
 };

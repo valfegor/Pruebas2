@@ -14,5 +14,6 @@ router.delete("/deleteTask/:_id",Auth, ValidateUser,taskController.deleteTask)
 router.put("/assignTask",taskController.asignTask);
 router.put("/unassingTask",taskController.unassingTask);
 router.get("/listAssignedTasks",Auth, ValidateUser, taskController.listAsignedTasks);
+router.get("listRanking",taskController.listRankingPoints);
 
 module.exports = router;
