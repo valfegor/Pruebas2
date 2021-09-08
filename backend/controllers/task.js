@@ -322,9 +322,12 @@ const listAsignedTasks = async (req, res) => {
 const listRankingPoints = async (req, res) => {
   const user = await User.find();
 
-  const filtro = user.EarnedPoints.filter(element=>element.scorecompleted > 1);
+  
 
-  console.log(filtro);
+  for(let i of user){
+    let filtro = i.EarnedPoints.filter(element=>element.scorecompleted >= 1)
+    console.log(filtro)
+  }
 
   
   
