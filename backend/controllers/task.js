@@ -124,7 +124,22 @@ const updateTask = async (req, res) => {
 
     let data = {};
 
-    console.log(user);
+    
+
+    let filtrotask = user.AssignedTasks
+
+    filtrotask.filter=(element=>element.idTask === task._id);
+
+    
+
+    
+
+    filtrotask.map(element=>{
+      element.completed = true
+      console.log(element)
+    })
+    
+    
 
     if (user.EarnedPoints.length == 0) {
       data = {
@@ -147,9 +162,10 @@ const updateTask = async (req, res) => {
 
       if (existe) {
         const nuevopuntaje = user.EarnedPoints.map((element) => {
-          data = { 
-            name:user.name,
-            scorecompleted: element.scorecompleted + 1 };
+          data = {
+            name: user.name,
+            scorecompleted: element.scorecompleted + 1,
+          };
         });
 
         const userPoints = await User.findByIdAndUpdate(user._id, {
@@ -168,12 +184,9 @@ const updateTask = async (req, res) => {
 //es decir trae todas las tareas de los todos los tableros.
 
 const listTask = async (req, res) => {
-  const task = await Task.find({
-    $and: [
-      { boardName: new RegExp(req.params["boardName"], "i") },
-      { dbStatus: "true" },
-    ],
-  });
+  if(!req.params._id) return res.status(400).send("Sorry cant show the tasks");
+  console.log(req.params._id);
+  const task = await Task.find({boardId:req.params._id});
   console.log(task);
   if (!task || task.length == 0)
     return res
@@ -318,26 +331,20 @@ const listAsignedTasks = async (req, res) => {
     return res.status(400).send("Sorry the user dont have asigned tasks ");
 };
 
-
 const listRankingPoints = async (req, res) => {
   const user = await User.find();
 
-  let ranking=[];
-  
+  let ranking = [];
 
-  for(let i of user){
-    let filtro = i.EarnedPoints.filter(element=>element.scorecompleted > 1)
-    for(let j of filtro){
+  for (let i of user) {
+    let filtro = i.EarnedPoints.filter((element) => element.scorecompleted > 1);
+    for (let j of filtro) {
       ranking.push(j);
     }
-    
   }
 
-  return res.status(200).send({ranking});
-  
-  
-  
-}
+  return res.status(200).send(ranking);
+};
 
 module.exports = {
   saveTask,
@@ -347,5 +354,5 @@ module.exports = {
   asignTask,
   unassingTask,
   listAsignedTasks,
-  listRankingPoints
+  listRankingPoints,
 };
