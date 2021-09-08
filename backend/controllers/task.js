@@ -124,9 +124,12 @@ const updateTask = async (req, res) => {
 
     let data = {};
 
+    
+
     console.log(user);
 
     if (user.EarnedPoints.length == 0) {
+     
       data = {
         scorecompleted: acumScore,
       };
@@ -139,7 +142,30 @@ const updateTask = async (req, res) => {
 
       return res.status(200).send({ userPoints });
     }else{
-      return res.status(200).send("Taskete")
+
+      let existe = user.EarnedPoints.some(element=>element.scorecompleted >= 1 );
+
+      console.log(existe)
+
+      if(existe){
+
+        const nuevopuntaje = user.EarnedPoints.map(element=>{
+          data={scorecompleted:element.scorecompleted+1 };
+          
+        })
+
+        const userPoints = await User.findByIdAndUpdate(user._id, {
+          EarnedPoints: data
+        });
+
+      }
+      
+        
+      
+     
+
+
+      
     }
 
     
