@@ -279,10 +279,12 @@ const listAsignedTasks = async (req, res) => {
 
   const user = await User.find({ _id: req.user._id});
 
-  return res.status(200).send({})
+  
 
-
+  if(!user.AssignedTasks || user.AssignedTasks.length === 0 || user.AssignedTasks === null) return res.status(400).send("Sorry the user dont have asigned tasks")
   console.log(user);
+  return res.status(200).send(user.AssignedTasks);
+  
 }
 
 module.exports = {
