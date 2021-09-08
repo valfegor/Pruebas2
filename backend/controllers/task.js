@@ -323,14 +323,18 @@ const listRankingPoints = async (req, res) => {
   const user = await User.find();
 
   let ranking=[];
+  
 
   for(let i of user){
     let filtro = i.EarnedPoints.filter(element=>element.scorecompleted > 1)
-    console.log(filtro)
-    ranking.push(filtro);
+    for(let j of filtro){
+      ranking.push(j);
+    }
+    
   }
 
-  return res.status(200).send(ranking);
+  return res.status(200).send({ranking});
+  
   
   
 }
