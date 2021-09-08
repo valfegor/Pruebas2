@@ -272,6 +272,12 @@ const unassingTask = async (req, res) => {
   return res.status(200).send({ message: "Succes Unassing The task" });
 };
 
+
+const listAsignedTasks = async (req, res) => {
+  const validId = mongoose.Types.ObjectId.isValid(req.user._id);
+  if (!validId) return res.status(400).send("Invalid id");
+}
+
 module.exports = {
   saveTask,
   updateTask,
