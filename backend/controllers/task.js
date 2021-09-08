@@ -147,7 +147,9 @@ const updateTask = async (req, res) => {
 
       if (existe) {
         const nuevopuntaje = user.EarnedPoints.map((element) => {
-          data = { scorecompleted: element.scorecompleted + 1 };
+          data = { 
+            name:user.name,
+            scorecompleted: element.scorecompleted + 1 };
         });
 
         const userPoints = await User.findByIdAndUpdate(user._id, {
@@ -320,7 +322,12 @@ const listAsignedTasks = async (req, res) => {
 const listRankingPoints = async (req, res) => {
   const user = await User.find();
 
-  console.log(user);
+  const filtro = user.EarnedPoints.filter(element=>element.scorecompleted > 1);
+
+  console.log(filtro);
+
+  
+  
 }
 
 module.exports = {
