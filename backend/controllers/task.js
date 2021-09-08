@@ -282,7 +282,7 @@ const listAsignedTasks = async (req, res) => {
 
   for(const iterator of user){
     console.log(iterator.AssignedTasks);
-    return res.status(200).send({iterator.AssignedTasks});
+    return res.status(200).send(iterator.AssignedTasks);
   }
   
 
