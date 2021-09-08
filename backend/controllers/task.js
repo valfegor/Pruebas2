@@ -279,6 +279,9 @@ const listAsignedTasks = async (req, res) => {
 
   const user = await User.find({ _id: req.user._id});
 
+  return res.status(200).send({})
+
+
   console.log(user);
 }
 
