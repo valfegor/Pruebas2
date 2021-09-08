@@ -83,7 +83,7 @@ const saveTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
   let validId = mongoose.Types.ObjectId.isValid(req.user._id);
-  console.log(req.user._id);
+ 
   if (!validId) return res.status(400).send("Invalid id");
 
   if (!req.body._id || !req.body.taskStatus)
@@ -102,8 +102,9 @@ const updateTask = async (req, res) => {
   const inactiveTask = await Task.findById({ _id: req.body._id });
 
   const user = await User.findById(inactiveTask.assignedTo);
+  
 
-  if (!user)
+  if (req.user._id != inactiveTask.assignedTo)
     return res
       .status(400)
       .send("Please check that user dont have assigned this task");
