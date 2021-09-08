@@ -1,5 +1,6 @@
 const upload = async (req, res, next) => {
-  if (!req.files.image) {
+  console.log(req.files.image)
+  if (!req.files.image || req.files.image.type == null) {
     next();
   } else {
     if (req.files.image.type) {

@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const cors = require("cors");
 const { dbConnection } = require("./db/db");
 const Role = require("./routes/role");
@@ -16,6 +16,7 @@ app.use("/api/role", Role);
 app.use("/api/user", User);
 app.use("/api/board", Board);
 app.use('/api/task',Task);
+app.use("/uploads", express.static("uploads"))
 
 
 

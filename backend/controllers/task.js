@@ -41,19 +41,20 @@ const saveTask = async (req, res) => {
       .status(400)
       .send("Sorry The Board Not Exist Please Generate A Board");
 
-  let imageUrl = "";
-  if (req.files.image) {
-    if (req.files.image.type != null) {
-      const url = req.protocol + "://" + req.get("host") + "/";
-      const serverImg =
-        "./uploads/" + moment().unix() + path.extname(req.files.image.path);
+      let imageUrl = "";
+      if (req.files.image) {
+       if (req.files.image.type != null) {
+        const url = req.protocol + "://" + req.get("host") + "/";
+        const serverImg =
+         "./uploads/" + moment().unix() + path.extname(req.files.image.path);
       fs.createReadStream(req.files.image.path).pipe(
-        fs.createWriteStream(serverImg)
-      );
-      imageUrl =
+         fs.createWriteStream(serverImg)
+        );
+     imageUrl =
         url + "uploads/" + moment().unix() + path.extname(req.files.image.path);
-    }
-  }
+      }
+     }
+  
 
   //Author sera verdaderamente req.user.name
 
@@ -79,7 +80,8 @@ const saveTask = async (req, res) => {
   if (!result) return res.stats(200).send("No task was saved");
 
   return res.status(200).send({ task });
-};
+  
+}
 
 const updateTask = async (req, res) => {
   let validId = mongoose.Types.ObjectId.isValid(req.user._id);
