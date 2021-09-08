@@ -98,13 +98,20 @@ const updateTask = async (req, res) => {
     scoreUser = 0;
     status = true;
   }
-  /*
+  
   const inactiveTask = await Task.findById({ _id: req.body._id });
+
+  const user = await User.findById(inactiveTask.assignedTo);
+
+  if (!user)
+    return res
+      .status(400)
+      .send("Please check that user dont have assigned this task");
 
   if (inactiveTask.dbStatus == false || !inactiveTask || inactiveTask==null) {
     return res.status(400).send("You already did that Task ");
   }
-  */
+  
 
   const task = await Task.findByIdAndUpdate(req.body._id, {
     taskStatus: req.body.taskStatus,
@@ -112,12 +119,10 @@ const updateTask = async (req, res) => {
     userModify: req.user.name,
   });
 
-  const user = await User.findById(task.assignedTo);
+ 
 
-  if (!user)
-    return res
-      .status(400)
-      .send("Please check that user dont have assigned this task");
+
+    
 
   if (scoreUser == 1) {
     let acumScore = 1;
@@ -136,7 +141,7 @@ const updateTask = async (req, res) => {
 
     filtrotask.map(element=>{
       element.completed = true
-      console.log(element)
+      
     })
     
     
@@ -158,7 +163,7 @@ const updateTask = async (req, res) => {
         (element) => element.scorecompleted >= 1
       );
 
-      console.log(existe);
+      
 
       if (existe) {
         const nuevopuntaje = user.EarnedPoints.map((element) => {
@@ -249,6 +254,7 @@ const asignTask = async (req, res) => {
     {
       assigned: true,
       assignedTo: existingUser._id,
+      username:existingUser.name
     }
   );
 
