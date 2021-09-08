@@ -245,6 +245,9 @@ const unassingTask = async (req, res) => {
   if (!task)
     return res.status(400).send("Sorry the task dont exist please check");
 
+    if (task.assigned !== true)
+    return res.status(400).send(" Sorry the task its not asigned please Check");
+
   const indice = user.AssignedTasks.findIndex(
     (element) => element.name === task.name
   );
